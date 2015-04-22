@@ -57,7 +57,9 @@
                             curl_close($curl);
 
                             $results = json_decode($result, true);
-                            $user_name = $results['user']['username'];
+                            $user_name = isset($results['user']['username']) ? $results['user']['username'] : "";
+
+                            get_user_id($user_name);
 
                             echo '<li><a href="#">' . $user_name . '</a></li>';
                             echo '<li><a href="/">Logout</a></li>';

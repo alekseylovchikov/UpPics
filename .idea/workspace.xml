@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a9255fea-cb56-4fc9-b9c1-25c6b46ec4a6" name="Default" comment="">
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/config.php" afterPath="$PROJECT_DIR$/config.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/index.php" afterPath="$PROJECT_DIR$/index.php" />
     </list>
     <ignored path="phpbook.iws" />
@@ -30,12 +31,12 @@
       <file leaf-file-name="index.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/index.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.31609195" vertical-offset="133" max-vertical-offset="1513">
-              <caret line="24" column="51" selection-start-line="24" selection-start-column="51" selection-end-line="24" selection-end-column="51" />
+            <state vertical-scroll-proportion="0.570115" vertical-offset="541" max-vertical-offset="1547">
+              <caret line="61" column="52" selection-start-line="61" selection-start-column="52" selection-end-line="61" selection-end-column="52" />
               <folding>
-                <marker date="1429700390481" expanded="true" signature="3613:3753" placeholder="..." />
-                <marker date="1429700390481" expanded="true" signature="3634:3688" placeholder="..." />
-                <marker date="1429700390481" expanded="true" signature="3711:3734" placeholder="..." />
+                <marker date="1429702376142" expanded="true" signature="3710:3850" placeholder="..." />
+                <marker date="1429702376142" expanded="true" signature="3731:3785" placeholder="..." />
+                <marker date="1429702376142" expanded="true" signature="3808:3831" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -44,8 +45,8 @@
       <file leaf-file-name="config.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.8846154" vertical-offset="0" max-vertical-offset="408">
-              <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
+            <state vertical-scroll-proportion="-26.807692" vertical-offset="0" max-vertical-offset="816">
+              <caret line="41" column="44" selection-start-line="41" selection-start-column="44" selection-end-line="41" selection-end-column="44" />
               <folding />
             </state>
           </provider>
@@ -225,20 +226,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/config.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.8846154" vertical-offset="0" max-vertical-offset="408">
-          <caret line="9" column="29" selection-start-line="9" selection-start-column="29" selection-end-line="9" selection-end-column="29" />
+        <state vertical-scroll-proportion="-26.807692" vertical-offset="0" max-vertical-offset="816">
+          <caret line="41" column="44" selection-start-line="41" selection-start-column="44" selection-end-line="41" selection-end-column="44" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/index.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.31609195" vertical-offset="133" max-vertical-offset="1513">
-          <caret line="24" column="51" selection-start-line="24" selection-start-column="51" selection-end-line="24" selection-end-column="51" />
+        <state vertical-scroll-proportion="0.570115" vertical-offset="541" max-vertical-offset="1547">
+          <caret line="61" column="52" selection-start-line="61" selection-start-column="52" selection-end-line="61" selection-end-column="52" />
           <folding>
-            <marker date="1429700390481" expanded="true" signature="3613:3753" placeholder="..." />
-            <marker date="1429700390481" expanded="true" signature="3634:3688" placeholder="..." />
-            <marker date="1429700390481" expanded="true" signature="3711:3734" placeholder="..." />
+            <marker date="1429702376142" expanded="true" signature="3710:3850" placeholder="..." />
+            <marker date="1429702376142" expanded="true" signature="3731:3785" placeholder="..." />
+            <marker date="1429702376142" expanded="true" signature="3808:3831" placeholder="..." />
           </folding>
         </state>
       </provider>

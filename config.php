@@ -1,7 +1,7 @@
 <?php
 
 set_time_limit(0);
-ini_set('default_docket_timeout', 300);
+ini_set('default_socket_timeout', 300);
 session_start();
 
 define('CLIENT_ID', 'e56d1ca6c927498eba1d19f74cf46ded');
@@ -16,4 +16,28 @@ function if_login($code) {
     } else {
         return false;
     }
+}
+
+function connect_to_instagram($url) {
+    $ch = curl_init();
+
+    curl_setopt_array($ch, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => 2
+    ));
+
+    $result = curl_exec($ch);
+    curl_close($ch);
+
+    return $result;
+}
+
+function get_user_id($user_name) {
+    $url = "https://api.instagram.com/v1/users/search?={$user_name}&client_id=" . CLIENT_ID;
+    $instagram_info = connect_to_instagram($url);
+    $results = json_decode($instagram_info, true);
+
+    return $instagram_info['data'][0]['id'];
 }
