@@ -22,7 +22,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/phpbook/">UpPics</a>
+                    <a class="navbar-brand" href="/">UpPics</a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -60,7 +60,7 @@
                             $user_name = $results['user']['username'];
 
                             echo '<li><a href="#">' . $user_name . '</a></li>';
-                            echo '<li><a href="/phpbook/">Logout</a></li>';
+                            echo '<li><a href="/">Logout</a></li>';
                         } else {
                             echo '<li><a href="https://api.instagram.com/oauth/authorize/?client_id=' . CLIENT_ID . '&redirect_uri=' . REDIRECT_URI . '&response_type=code">Login</a></li>';
                         }
