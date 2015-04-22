@@ -41,3 +41,14 @@ function get_user_id($user_name) {
 
     return $instagram_info['data'][0]['id'];
 }
+
+function show_images($user_id) {
+    $url = "https://api.instagram.com/v1/users/{$user_id}/media/recent?client_id=" . CLIENT_ID . "&count=5";
+    $instagram_info = connect_to_instagram($url);
+    $results = json_decode($instagram_info, true);
+
+    foreach($results['data'] as $result) {
+        $image_url = $result['images']['low_resolution']['url'];
+        echo "<img src='{$image_url}' alt='' /><br />";
+    }
+}

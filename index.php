@@ -59,7 +59,7 @@
                             $results = json_decode($result, true);
                             $user_name = isset($results['user']['username']) ? $results['user']['username'] : "";
 
-                            get_user_id($user_name);
+                            $user_id = get_user_id($user_name);
 
                             echo '<li><a href="#">' . $user_name . '</a></li>';
                             echo '<li><a href="/">Logout</a></li>';
@@ -80,6 +80,22 @@
             </header>
 
             <section>
+                <form action="/" method="post">
+                    <p><input class="form-control" type="text" name="user-name" placeholder="Put here user name" /></p>
+                    <p><button class="btn btn-success" type="submit" name="submit">Get images</button></p>
+                </form>
+            </section>
+
+            <section class="row">
+                <section class="col-md-2">
+                <?php
+
+                if(if_login($code)) {
+                    show_images($user_id);
+                }
+
+                ?>
+                </section>
             </section>
         </article>
     </body>
