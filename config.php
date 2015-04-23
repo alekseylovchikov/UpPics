@@ -73,6 +73,7 @@ function save_picture($imgs = array(), $user_dir) {
     $file_names = array();
     $destination = array();
     $count = 0;
+    mkdir(IMAGE_DIR . $user_dir . '/', 0700);
     foreach($imgs as $img) {
         $file_names[] = basename($img);
     }

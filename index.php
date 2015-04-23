@@ -88,10 +88,21 @@
             </header>
 
             <section>
-                <form action="/phpbook/?code=<?= $code ?>" method="post">
-                    <p><input class="form-control" type="text" name="user-name" placeholder="Instagram user profile name" /></p>
-                    <p class="text-center"><button class="btn btn-success" type="submit" name="submit">Get images</button></p>
-                </form>
+                <?php
+
+                $output = "";
+
+                if(isset($_GET['code'])) {
+                  $output .= '<form action="/phpbook/?code=<?= $code ?>" method="post">';
+                  $output .= '<p><input class="form-control" type="text" name="user-name" placeholder="Instagram user profile name" /></p>';
+                  $output .= '<p class="text-center"><button class="btn btn-success" type="submit" name="submit">Get images</button></p>';
+                  $output .= '</form>';
+                  echo $output;
+                } else {
+                  echo "<h1 class='alert alert-info'>Please, login...</h1>";
+                }
+
+                ?>
             </section>
 
             <section class="row">
