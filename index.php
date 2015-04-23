@@ -70,7 +70,7 @@
                             $user_id = get_user_id($get_user_pics);
 
                             echo '<li><a href="#">' . $user_name . '</a></li>';
-                            echo '<li><a href="/">Logout</a></li>';
+                            echo '<li><a href="/phpbook/">Logout</a></li>';
                         } else {
                             echo '<li><a href="https://api.instagram.com/oauth/authorize/?client_id=' . CLIENT_ID . '&redirect_uri=' . REDIRECT_URI . '&response_type=code">Login</a></li>';
                         }
@@ -93,9 +93,9 @@
                 $output = "";
 
                 if(isset($_GET['code'])) {
-                  $output .= '<form action="/phpbook/?code=<?= $code ?>" method="post">';
-                  $output .= '<p><input class="form-control" type="text" name="user-name" placeholder="Instagram user profile name" /></p>';
-                  $output .= '<p class="text-center"><button class="btn btn-success" type="submit" name="submit">Get images</button></p>';
+                  $output .= '<form action="/phpbook/?code=' . $code . '" method="post" enctype="multipart/form-data">';
+                  $output .= '<p><input class="form-control" type="text" name="user-name" placeholder="Instagram user name" /></p>';
+                  $output .= '<p class="text-center"><button class="btn btn-success" type="submit" name="submit">Download last 12 pictures</button></p>';
                   $output .= '</form>';
                   echo $output;
                 } else {
@@ -109,12 +109,27 @@
                 <?php
 
                 $get_pics = array();
+                $errors = array();
+                $show_error = "";
 
                 if(if_login($code) && isset($user_id) && !empty($user_id)) {
-                    $get_pics = show_images($user_id);
+                    $get_pics = show_images($user_id, $get_user_pics);
 
-                    foreach($get_pics as $pic) {
-                        echo '<section class="col-md-4 pics"><a href="' . $pic['images']['standard_resolution']['url'] . '" target="_blank"><img class="img-thumbnail img-responsive" src="' . $pic['images']['standard_resolution']['url'] . '" alt="" /></a></section>';
+                    if($get_pics) {
+                      echo '<header class="col-md-12">
+                              <h1 class="text-center alert alert-success">Downloaded picture is done.</h1>
+                            </header>';
+                      foreach($get_pics as $pic) {
+                          echo '<section class="col-md-4 pics"><a href="' . $pic['images']['standard_resolution']['url'] . '" target="_blank"><img class="img-thumbnail img-responsive" src="' . $pic['images']['standard_resolution']['url'] . '" alt="" /></a></section>';
+                      }
+                    } else {
+                        $errors[] = 'Invalid user name!<br />';
+                        $show_error .= "<h1 class='alert alert-danger'>";
+                        foreach($errors as $error) {
+                          $show_error .= $error;
+                        }
+                        $show_error .= '</h1>';
+                        echo $show_error;
                     }
                 }
 

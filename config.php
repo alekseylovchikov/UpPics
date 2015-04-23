@@ -50,8 +50,7 @@ function get_user_id($user_name) {
     }
 }
 
-function show_images($user_id) {
-    // $url = "https://api.instagram.com/v1/users/{$user_id}/media/recent?client_id=" . CLIENT_ID . "&count=6";
+function show_images($user_id, $user_name) {
     $url = "https://api.instagram.com/v1/users/{$user_id}/media/recent?client_id=" . CLIENT_ID . "&count=12";
     $instagram_info = connect_to_instagram($url);
     $results = json_decode($instagram_info, true);
@@ -59,21 +58,30 @@ function show_images($user_id) {
     $pics = array();
     $big_pics = array();
 
-    foreach($results['data'] as $result) {
-        $pics[] = $result;
-        $big_pics[] = $result['images']['standard_resolution']['url'];
+    if(!empty($results['data']) && isset($results['data'])) {
+      foreach($results['data'] as $result) {
+          $pics[] = $result;
+          $big_pics[] = $result['images']['standard_resolution']['url'];
+      }
+
+      save_picture($big_pics, $user_name);
+
+      return $pics;
+    } else {
+      return false;
     }
-
-    save_picture($big_pics, $user_id);
-
-    return $pics;
 }
 
 function save_picture($imgs = array(), $user_dir) {
     $file_names = array();
     $destination = array();
     $count = 0;
-    mkdir(IMAGE_DIR . $user_dir . '/', 0700);
+    $count_dirs = 1;
+
+    if(!is_dir(IMAGE_DIR . $user_dir . '/')) {
+      mkdir(IMAGE_DIR . $user_dir . '/', 0700);
+    }
+    
     foreach($imgs as $img) {
         $file_names[] = basename($img);
     }
