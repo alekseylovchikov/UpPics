@@ -78,7 +78,7 @@ function save_picture($imgs = array(), $user_dir) {
     }
 
     foreach($file_names as $file_name) {
-        $destination[] = IMAGE_DIR . $user_dir . $file_name;
+        $destination[] = IMAGE_DIR . $user_dir . '/' . $file_name;
     }
 
     foreach($destination as $put) {
