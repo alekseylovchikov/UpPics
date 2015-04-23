@@ -45,9 +45,9 @@ if (preg_match($reg, $str)==1) {
                     <?php
 
                     if(isset($_SESSION['code'])) {
-                      echo '<a class="navbar-brand" href="/phpbook/?code=' . $_SESSION['code'] . '">UpPics</a>';
+                      echo '<a class="navbar-brand" href="?code=' . $_SESSION['code'] . '">UpPics</a>';
                     } else {
-                      echo '<a class="navbar-brand" href="/phpbook/">UpPics</a>';
+                      echo '<a class="navbar-brand" href="/">UpPics</a>';
                     }
 
                     ?>
@@ -89,7 +89,7 @@ if (preg_match($reg, $str)==1) {
                             // get pics from user profile name
                             $user_id = get_user_id($get_user_pics);
 
-                            echo '<li><a href="/phpbook/?q=logout">Logout</a></li>';
+                            echo '<li><a href="?q=logout">Logout</a></li>';
                         } else {
                             echo '<li><a href="https://api.instagram.com/oauth/authorize/?client_id=' . CLIENT_ID . '&redirect_uri=' . REDIRECT_URI . '&response_type=code">Login</a></li>';
                         }
@@ -112,7 +112,7 @@ if (preg_match($reg, $str)==1) {
                 $output = "";
 
                 if(isset($_GET['code'])) {
-                  $output .= '<form action="/phpbook/?code=' . $code . '" method="post" enctype="multipart/form-data">';
+                  $output .= '<form action="?code=' . $code . '" method="post" enctype="multipart/form-data">';
                   $output .= '<p><input class="form-control" type="text" name="user-name" placeholder="Instagram user name" /></p>';
                   $output .= '<p class="text-center"><button class="btn btn-success" type="submit" name="submit">Download last 12 pictures</button></p>';
                   $output .= '</form>';
