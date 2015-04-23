@@ -4,16 +4,16 @@ set_time_limit(0);
 ini_set('default_socket_timeout', 300);
 session_start();
 
-/*define('CLIENT_ID', 'e56d1ca6c927498eba1d19f74cf46ded');
+define('CLIENT_ID', 'e56d1ca6c927498eba1d19f74cf46ded');
 define('CLIENT_SECRET', '8c690088725e40c1a4620e4c36a94f5d');
 define('REDIRECT_URI', 'https://uppics.herokuapp.com/');
-define('IMAGE_DIR', 'pics/');*/
+define('IMAGE_DIR', 'pics/');
 
 /* FOR LOCAL TEST */
-define('CLIENT_ID', '9bf3c45bc6e3465ba84ad501a9e7ff2d');
+/*define('CLIENT_ID', '9bf3c45bc6e3465ba84ad501a9e7ff2d');
 define('CLIENT_SECRET', 'bf3f243d6cb8470a94580aa0fed87c2c');
 define('REDIRECT_URI', 'http://localhost:63342/phpbook/index.php');
-define('IMAGE_DIR', 'pics/');
+define('IMAGE_DIR', 'pics/');*/
 
 function if_login($code) {
     $code = trim($code);
