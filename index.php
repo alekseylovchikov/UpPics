@@ -1,16 +1,135 @@
-<?php include_once("config.php"); ?>
-
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+ini_set('default_socket_timeout', 300);
+session_start();
+
+/*define('CLIENT_ID', 'e56d1ca6c927498eba1d19f74cf46ded');
+define('CLIENT_SECRET', '8c690088725e40c1a4620e4c36a94f5d');
+define('REDIRECT_URI', 'https://uppics.herokuapp.com/');
+define('IMAGE_DIR', 'pics/');*/
+
+/* FOR LOCAL TEST */
+/*define('CLIENT_ID', '9bf3c45bc6e3465ba84ad501a9e7ff2d');
+define('CLIENT_SECRET', 'bf3f243d6cb8470a94580aa0fed87c2c');
+define('REDIRECT_URI', 'http://localhost:63342/phpbook/index.php');
+define('IMAGE_DIR', 'pics/');*/
+
+define('CLIENT_ID', '6dd0c078cb514f59a4b8c923e66a9d99');
+define('CLIENT_SECRET', 'b8c5a16fe09e4bc59acf9d972b251c5a');
+define('REDIRECT_URI', 'http://uppics.zz.mu/');
+define('IMAGE_DIR', 'pics/');
+
+function if_login($code) {
+    $code = trim($code);
+    if(!empty($code) && isset($code)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function connect_to_instagram($url) {
+    $ch = curl_init();
+
+    curl_setopt_array($ch, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_SSL_VERIFYPEER => false,
+        CURLOPT_SSL_VERIFYHOST => 2
+    ));
+
+    $result = curl_exec($ch);
+    curl_close($ch);
+
+    return $result;
+}
+
+function get_user_id($user_name) {
+    if(isset($user_name) && !empty($user_name)) {
+      $url = "https://api.instagram.com/v1/users/search?q={$user_name}&client_id=" . CLIENT_ID;
+      $instagram_info = connect_to_instagram($url);
+      $results = json_decode($instagram_info, true);
+
+      return $results['data'][0]['id'];
+    }
+}
+
+// show all images
+function show_images($user_id, $user_name) {
+    $url = "https://api.instagram.com/v1/users/{$user_id}/media/recent?client_id=" . CLIENT_ID . "&count=30";
+    $instagram_info = connect_to_instagram($url);
+    $results = json_decode($instagram_info, true);
+
+    $pics = array();
+    $big_pics = array();
+
+    if(!empty($results['data']) && isset($results['data'])) {
+      foreach($results['data'] as $result) {
+          $pics[] = $result;
+          $big_pics[] = $result['images']['standard_resolution']['url'];
+      }
+
+      // save_picture($big_pics, $user_name);
+
+      return $pics;
+    } else {
+      return false;
+    }
+}
+
+// save pics in dirs
+function save_picture($imgs = array(), $user_dir) {
+    $file_names = array();
+    $destination = array();
+    $count = 0;
+    $count_dirs = 1;
+    $user_dir .= '/';
+
+    if(!is_dir(IMAGE_DIR . $user_dir . '/')) {
+      mkdir(IMAGE_DIR . $user_dir . '/', 0700);
+    }
+
+    foreach($imgs as $img) {
+        $file_names[] = basename($img);
+    }
+
+    foreach($file_names as $file_name) {
+        $destination[] = IMAGE_DIR . $user_dir . $file_name;
+    }
+
+    foreach($destination as $put) {
+        file_put_contents($put, file_get_contents($imgs[$count]));
+        $count++;
+    }
+}
+
+// show all dirs
+/*function show_dirs() {
+  if($open_dir = opendir(IMAGE_DIR)) {
+    while(($entry = readdir($open_dir)) !== false) {
+      // echo $entry . '<br />';
+    }
+
+    closedir($open_dir);
+  }
+}*/
 
 if(isset($_GET['code'])) {
   $_SESSION['code'] = $_GET['code'];
 }
 
-$str = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];  // проверка, если пользователь нажал выход, сессия удаляется
-$reg="/logout/";
-if (preg_match($reg, $str)==1) {
-  unset($_SESSION);
+if(isset($_SESSION['code'])) {
+  $_GET['code'] = $_SESSION['code'];
+}
+
+$str = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];
+$reg = "/logout/";
+if (preg_match($reg, $str)) {
+  unset($_SESSION['code']);
   session_destroy();
+  header("Location: /");
 }
 
 ?>
@@ -26,7 +145,15 @@ if (preg_match($reg, $str)==1) {
         <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/lumen/bootstrap.min.css" rel="stylesheet" />
         <style>
           .pics {
-            padding: 5px;
+            padding-bottom: 15px;
+          }
+
+          .img-shadow {
+              box-shadow: 0 0 8px rgba(0,0,0,0.5);
+              -webkit-box-shadow: 0 0 8px rgba(0,0,0,0.5);
+              -moz-box-shadow: 0 0 8px rgba(0,0,0,0.5);
+              -o-box-shadow: 0 0 8px rgba(0,0,0,0.5);
+              padding: 10px;
           }
         </style>
     </head>
@@ -45,7 +172,7 @@ if (preg_match($reg, $str)==1) {
                     <?php
 
                     if(isset($_SESSION['code'])) {
-                      echo '<a class="navbar-brand" href="?code=' . $_SESSION['code'] . '">UpPics</a>';
+                      echo '<a class="navbar-brand" href="/">UpPics</a>';
                     } else {
                       echo '<a class="navbar-brand" href="/">UpPics</a>';
                     }
@@ -89,9 +216,9 @@ if (preg_match($reg, $str)==1) {
                             // get pics from user profile name
                             $user_id = get_user_id($get_user_pics);
 
-                            echo '<li><a href="?q=logout">Logout</a></li>';
+                            echo '<li><a href="?q=logout">Выйти</a></li>';
                         } else {
-                            echo '<li><a href="https://api.instagram.com/oauth/authorize/?client_id=' . CLIENT_ID . '&redirect_uri=' . REDIRECT_URI . '&response_type=code">Login</a></li>';
+                            echo '<li><a href="https://api.instagram.com/oauth/authorize/?client_id=' . CLIENT_ID . '&redirect_uri=' . REDIRECT_URI . '&response_type=code">Войти</a></li>';
                         }
 
                         ?>
@@ -112,14 +239,14 @@ if (preg_match($reg, $str)==1) {
                 $output = "";
 
                 if(isset($_GET['code'])) {
-                  $output .= '<form action="?code=' . $code . '" method="post" enctype="multipart/form-data">';
-                  $output .= '<p><input class="form-control" type="text" name="user-name" placeholder="Instagram user name" /></p>';
-                  $output .= '<p class="text-center"><button class="btn btn-success" type="submit" name="submit">Download last 12 pictures</button></p>';
+                  $output .= '<form action="/" method="post">';
+                  $output .= '<p><input class="form-control" type="text" name="user-name" placeholder="Логин пользователя (например mura_boutique)" /></p>';
+                  $output .= '<p class="text-center"><button class="btn btn-success" type="submit" name="submit">Показать последние фото</button></p>';
                   $output .= '</form>';
                   echo $output;
                 } else {
-                  echo "<h1 class='alert alert-info'>Please, login...</h1>";
-                  echo '<section class="text-center"><a class="btn btn-success" href="https://api.instagram.com/oauth/authorize/?client_id=' . CLIENT_ID . '&redirect_uri=' . REDIRECT_URI . '&response_type=code">Login</a></section>';
+                  echo "<h1 class='alert alert-info'>Пожалуйста, войдите...</h1>";
+                  echo '<section class="text-center"><a class="btn btn-success" href="https://api.instagram.com/oauth/authorize/?client_id=' . CLIENT_ID . '&redirect_uri=' . REDIRECT_URI . '&response_type=code">Войти</a></section>';
                 }
 
                 ?>
@@ -137,16 +264,14 @@ if (preg_match($reg, $str)==1) {
 
                     if($get_pics) {
                       echo '<header class="col-md-12">
-                              <h1 class="text-center alert alert-success">Downloaded picture is done.</h1>
+                              <h1 class="text-center alert alert-success"><span class="glyphicon glyphicon-ok"></span> Загрузка последних фото завершена.</h1>
                             </header>';
                       foreach($get_pics as $pic) {
-                          echo '<section class="col-md-4 pics"><a href="' . $pic['images']['standard_resolution']['url'] . '" target="_blank"><img class="img-thumbnail img-responsive" src="' . $pic['images']['standard_resolution']['url'] . '" alt="" /></a></section>';
+                          echo '<section class="col-md-12 pics text-center"><a href="' . $pic['images']['standard_resolution']['url'] . '" target="_blank"><img class="img-thumbnail img-responsive img-shadow" src="' . $pic['images']['standard_resolution']['url'] . '" alt="" /></a></section>';
                       }
 
-                      show_dirs();
-
                     } else {
-                        $errors[] = 'Invalid user name!<br />';
+                        $errors[] = 'Неверное имя пользователя!<br />';
                         $show_error .= "<h1 class='alert alert-danger'>";
                         foreach($errors as $error) {
                           $show_error .= $error;
