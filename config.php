@@ -4,9 +4,15 @@ set_time_limit(0);
 ini_set('default_socket_timeout', 300);
 session_start();
 
-define('CLIENT_ID', 'e56d1ca6c927498eba1d19f74cf46ded');
+/*define('CLIENT_ID', 'e56d1ca6c927498eba1d19f74cf46ded');
 define('CLIENT_SECRET', '8c690088725e40c1a4620e4c36a94f5d');
 define('REDIRECT_URI', 'https://uppics.herokuapp.com/');
+define('IMAGE_DIR', 'pics/');*/
+
+/* LOCAL TEST */
+define('CLIENT_ID', '9bf3c45bc6e3465ba84ad501a9e7ff2d');
+define('CLIENT_SECRET', 'bf3f243d6cb8470a94580aa0fed87c2c');
+define('REDIRECT_URI', 'http://localhost:63342/phpbook/index.php');
 define('IMAGE_DIR', 'pics/');
 
 function if_login($code) {
@@ -35,20 +41,45 @@ function connect_to_instagram($url) {
 }
 
 function get_user_id($user_name) {
-    $url = "https://api.instagram.com/v1/users/search?={$user_name}&client_id=" . CLIENT_ID;
+    $user_name = 't0.carrera';
+    $url = "https://api.instagram.com/v1/users/search?q={$user_name}&client_id=" . CLIENT_ID;
     $instagram_info = connect_to_instagram($url);
     $results = json_decode($instagram_info, true);
 
-    return $instagram_info['data'][0]['id'];
+    return $results['data'][0]['id'];
 }
 
 function show_images($user_id) {
-    $url = "https://api.instagram.com/v1/users/{$user_id}/media/recent?client_id=" . CLIENT_ID . "&count=5";
+    // $url = "https://api.instagram.com/v1/users/{$user_id}/media/recent?client_id=" . CLIENT_ID . "&count=6";
+    $url = "https://api.instagram.com/v1/users/{$user_id}/media/recent?client_id=" . CLIENT_ID . "&count=9";
     $instagram_info = connect_to_instagram($url);
     $results = json_decode($instagram_info, true);
 
+    $pics = array();
+    $big_pics = array();
+
     foreach($results['data'] as $result) {
-        $image_url = $result['images']['low_resolution']['url'];
-        echo "<img src='{$image_url}' alt='' /><br />";
+        $pics[] = $result;
+        $big_pics[] = $result['images']['standard_resolution']['url'];
+    }
+
+    save_picture($big_pics);
+
+    return $pics;
+}
+
+function save_picture($imgs = array()) {
+    $file_names = array();
+    $destination = array();
+    foreach($imgs as $img) {
+        $file_names[] = basename($img);
+    }
+
+    foreach($file_names as $file_name) {
+        $destination[] = IMAGE_DIR . $file_name;
+    }
+
+    foreach($destination as $put) {
+        file_put_contents($put, file_get_contents($img));
     }
 }

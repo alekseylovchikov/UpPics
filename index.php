@@ -28,7 +28,7 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Link</a></li>
+                        <li class="active"><a href="#">Feed</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <?php
@@ -76,26 +76,30 @@
 
         <article class="container">
             <header>
-                <h1>UpPics</h1>
+                <h1 class="text-center">UpPics</h1>
             </header>
 
             <section>
                 <form action="/" method="post">
                     <p><input class="form-control" type="text" name="user-name" placeholder="Put here user name" /></p>
-                    <p><button class="btn btn-success" type="submit" name="submit">Get images</button></p>
+                    <p class="text-center"><button class="btn btn-success" type="submit" name="submit">Get images</button></p>
                 </form>
             </section>
 
             <section class="row">
-                <section class="col-md-2">
                 <?php
 
+                $get_pics = array();
+
                 if(if_login($code)) {
-                    show_images($user_id);
+                    $get_pics = show_images($user_id);
+
+                    foreach($get_pics as $pic) {
+                        echo '<section class="col-md-4"><a href="' . $pic['images']['standard_resolution']['url'] . '" target="_blank"><img class="img-thumbnail img-responsive" src="' . $pic['images']['low_resolution']['url'] . '" alt="" /></a></section>';
+                    }
                 }
 
                 ?>
-                </section>
             </section>
         </article>
     </body>
