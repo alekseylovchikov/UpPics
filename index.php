@@ -1,5 +1,20 @@
 <?php include_once("config.php"); ?>
 
+<?php
+
+if(isset($_GET['code'])) {
+  $_SESSION['code'] = $_GET['code'];
+}
+
+$str = $_SERVER["HTTP_HOST"] . $_SERVER["REQUEST_URI"];  // проверка, если пользователь нажал выход, сессия удаляется
+$reg="/logout/";
+if (preg_match($reg, $str)==1) {
+  unset($_SESSION);
+  session_destroy();
+}
+
+?>
+
 <!doctype html>
 <html>
     <head>
@@ -27,14 +42,19 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/phpbook/">UpPics</a>
+                    <?php
+
+                    if(isset($_SESSION['code'])) {
+                      echo '<a class="navbar-brand" href="/phpbook/?code=' . $_SESSION['code'] . '">UpPics</a>';
+                    } else {
+                      echo '<a class="navbar-brand" href="/phpbook/">UpPics</a>';
+                    }
+
+                    ?>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">Feed</a></li>
-                    </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <?php
 
@@ -69,8 +89,7 @@
                             // get pics from user profile name
                             $user_id = get_user_id($get_user_pics);
 
-                            echo '<li><a href="#">' . $user_name . '</a></li>';
-                            echo '<li><a href="/phpbook/">Logout</a></li>';
+                            echo '<li><a href="/phpbook/?q=logout">Logout</a></li>';
                         } else {
                             echo '<li><a href="https://api.instagram.com/oauth/authorize/?client_id=' . CLIENT_ID . '&redirect_uri=' . REDIRECT_URI . '&response_type=code">Login</a></li>';
                         }
@@ -100,6 +119,7 @@
                   echo $output;
                 } else {
                   echo "<h1 class='alert alert-info'>Please, login...</h1>";
+                  echo '<section class="text-center"><a class="btn btn-success" href="https://api.instagram.com/oauth/authorize/?client_id=' . CLIENT_ID . '&redirect_uri=' . REDIRECT_URI . '&response_type=code">Login</a></section>';
                 }
 
                 ?>
@@ -122,6 +142,9 @@
                       foreach($get_pics as $pic) {
                           echo '<section class="col-md-4 pics"><a href="' . $pic['images']['standard_resolution']['url'] . '" target="_blank"><img class="img-thumbnail img-responsive" src="' . $pic['images']['standard_resolution']['url'] . '" alt="" /></a></section>';
                       }
+
+                      show_dirs();
+
                     } else {
                         $errors[] = 'Invalid user name!<br />';
                         $show_error .= "<h1 class='alert alert-danger'>";

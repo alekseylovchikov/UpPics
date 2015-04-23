@@ -9,7 +9,7 @@ define('CLIENT_SECRET', '8c690088725e40c1a4620e4c36a94f5d');
 define('REDIRECT_URI', 'https://uppics.herokuapp.com/');
 define('IMAGE_DIR', 'pics/');*/
 
-/* LOCAL TEST */
+/* FOR LOCAL TEST */
 define('CLIENT_ID', '9bf3c45bc6e3465ba84ad501a9e7ff2d');
 define('CLIENT_SECRET', 'bf3f243d6cb8470a94580aa0fed87c2c');
 define('REDIRECT_URI', 'http://localhost:63342/phpbook/index.php');
@@ -50,6 +50,7 @@ function get_user_id($user_name) {
     }
 }
 
+// show all images
 function show_images($user_id, $user_name) {
     $url = "https://api.instagram.com/v1/users/{$user_id}/media/recent?client_id=" . CLIENT_ID . "&count=12";
     $instagram_info = connect_to_instagram($url);
@@ -72,6 +73,7 @@ function show_images($user_id, $user_name) {
     }
 }
 
+// save pics in dirs
 function save_picture($imgs = array(), $user_dir) {
     $file_names = array();
     $destination = array();
@@ -81,7 +83,7 @@ function save_picture($imgs = array(), $user_dir) {
     if(!is_dir(IMAGE_DIR . $user_dir . '/')) {
       mkdir(IMAGE_DIR . $user_dir . '/', 0700);
     }
-    
+
     foreach($imgs as $img) {
         $file_names[] = basename($img);
     }
@@ -94,4 +96,15 @@ function save_picture($imgs = array(), $user_dir) {
         file_put_contents($put, file_get_contents($imgs[$count]));
         $count++;
     }
+}
+
+// show all dirs
+function show_dirs() {
+  if($open_dir = opendir(IMAGE_DIR)) {
+    while(($entry = readdir($open_dir)) !== false) {
+      // echo $entry . '<br />';
+    }
+
+    closedir($open_dir);
+  }
 }
