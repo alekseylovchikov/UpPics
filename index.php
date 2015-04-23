@@ -240,7 +240,7 @@ if (preg_match($reg, $str)) {
 
                 if(isset($_GET['code'])) {
                   $output .= '<form action="/" method="post">';
-                  $output .= '<p><input class="form-control" type="text" name="user-name" placeholder="Логин пользователя (например mura_boutique)" /></p>';
+                  $output .= '<p><input class="form-control" type="text" name="user-name" placeholder="Логин пользователя (например nala_cat)" /></p>';
                   $output .= '<p class="text-center"><button class="btn btn-success" type="submit" name="submit">Показать последние фото</button></p>';
                   $output .= '</form>';
                   echo $output;
