@@ -41,17 +41,18 @@ function connect_to_instagram($url) {
 }
 
 function get_user_id($user_name) {
-    $user_name = 't0.carrera';
-    $url = "https://api.instagram.com/v1/users/search?q={$user_name}&client_id=" . CLIENT_ID;
-    $instagram_info = connect_to_instagram($url);
-    $results = json_decode($instagram_info, true);
+    if(isset($user_name) && !empty($user_name)) {
+      $url = "https://api.instagram.com/v1/users/search?q={$user_name}&client_id=" . CLIENT_ID;
+      $instagram_info = connect_to_instagram($url);
+      $results = json_decode($instagram_info, true);
 
-    return $results['data'][0]['id'];
+      return $results['data'][0]['id'];
+    }
 }
 
 function show_images($user_id) {
     // $url = "https://api.instagram.com/v1/users/{$user_id}/media/recent?client_id=" . CLIENT_ID . "&count=6";
-    $url = "https://api.instagram.com/v1/users/{$user_id}/media/recent?client_id=" . CLIENT_ID . "&count=9";
+    $url = "https://api.instagram.com/v1/users/{$user_id}/media/recent?client_id=" . CLIENT_ID . "&count=12";
     $instagram_info = connect_to_instagram($url);
     $results = json_decode($instagram_info, true);
 
@@ -63,23 +64,25 @@ function show_images($user_id) {
         $big_pics[] = $result['images']['standard_resolution']['url'];
     }
 
-    save_picture($big_pics);
+    save_picture($big_pics, $user_id);
 
     return $pics;
 }
 
-function save_picture($imgs = array()) {
+function save_picture($imgs = array(), $user_dir) {
     $file_names = array();
     $destination = array();
+    $count = 0;
     foreach($imgs as $img) {
         $file_names[] = basename($img);
     }
 
     foreach($file_names as $file_name) {
-        $destination[] = IMAGE_DIR . $file_name;
+        $destination[] = IMAGE_DIR . $user_dir . $file_name;
     }
 
     foreach($destination as $put) {
-        file_put_contents($put, file_get_contents($img));
+        file_put_contents($put, file_get_contents($imgs[$count]));
+        $count++;
     }
 }

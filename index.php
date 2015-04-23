@@ -9,6 +9,11 @@
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet" />
         <link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/lumen/bootstrap.min.css" rel="stylesheet" />
+        <style>
+          .pics {
+            padding: 5px;
+          }
+        </style>
     </head>
     <body>
         <!-- NAV BAR -->
@@ -22,7 +27,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="/">UpPics</a>
+                    <a class="navbar-brand" href="/phpbook/">UpPics</a>
                 </div>
 
                 <!-- Collect the nav links, forms, and other content for toggling -->
@@ -59,7 +64,10 @@
                             $results = json_decode($result, true);
                             $user_name = isset($results['user']['username']) ? $results['user']['username'] : "";
 
-                            $user_id = get_user_id($user_name);
+                            $get_user_pics = isset($_POST['user-name']) ? trim($_POST['user-name']) : "";
+
+                            // get pics from user profile name
+                            $user_id = get_user_id($get_user_pics);
 
                             echo '<li><a href="#">' . $user_name . '</a></li>';
                             echo '<li><a href="/">Logout</a></li>';
@@ -80,8 +88,8 @@
             </header>
 
             <section>
-                <form action="/" method="post">
-                    <p><input class="form-control" type="text" name="user-name" placeholder="Put here user name" /></p>
+                <form action="/phpbook/?code=<?= $code ?>" method="post">
+                    <p><input class="form-control" type="text" name="user-name" placeholder="Instagram user profile name" /></p>
                     <p class="text-center"><button class="btn btn-success" type="submit" name="submit">Get images</button></p>
                 </form>
             </section>
@@ -91,11 +99,11 @@
 
                 $get_pics = array();
 
-                if(if_login($code)) {
+                if(if_login($code) && isset($user_id) && !empty($user_id)) {
                     $get_pics = show_images($user_id);
 
                     foreach($get_pics as $pic) {
-                        echo '<section class="col-md-4"><a href="' . $pic['images']['standard_resolution']['url'] . '" target="_blank"><img class="img-thumbnail img-responsive" src="' . $pic['images']['low_resolution']['url'] . '" alt="" /></a></section>';
+                        echo '<section class="col-md-4 pics"><a href="' . $pic['images']['standard_resolution']['url'] . '" target="_blank"><img class="img-thumbnail img-responsive" src="' . $pic['images']['standard_resolution']['url'] . '" alt="" /></a></section>';
                     }
                 }
 
